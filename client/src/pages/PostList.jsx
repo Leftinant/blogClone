@@ -1,10 +1,9 @@
 import useApi from "../hooks/useApi";
 import { Link } from "react-router-dom";
 
-export default function PostList() {
+function PostList() {
   const { data: posts, loading } = useApi("/api/posts");
   if (loading) return <p>Loading...</p>;
-
   return (
     <div>
       <h1>Posts</h1>
@@ -19,3 +18,5 @@ export default function PostList() {
     </div>
   );
 }
+
+export default PostList;
