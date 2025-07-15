@@ -31,8 +31,8 @@ A full-featured blog platform built with the MERN stack (MongoDB, Express.js, Re
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/your-username/mern-blog.git
-cd mern-blog
+git clone https://github.com/Leftinant/blogClone
+cd blogClone
 
 
 ```
