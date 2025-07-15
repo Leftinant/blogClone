@@ -1,18 +1,20 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-export default function useApi(url) {
+const baseURL = import.meta.env.VITE_API_URL;
+
+export default function useApi(endpoint) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     axios
-      .get(url)
+      .get(`${baseURL}${endpoint}`)
       .then((res) => setData(res.data))
       .catch((err) => setError(err))
       .finally(() => setLoading(false));
-  }, [url]);
+  }, [endpoint]);
 
   return { data, loading, error };
 }
