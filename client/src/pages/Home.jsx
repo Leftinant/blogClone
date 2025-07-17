@@ -1,8 +1,7 @@
 import React from "react";
-import PostList from "./PostList";
 import Sidebar from "../components/SideBar";
 import Card from "../components/Card";
-import HomeBar from "../components/HomeBar";
+import NavBar from "../components/NavBar";
 
 function Home() {
   return (
@@ -10,7 +9,7 @@ function Home() {
       <div className='flex h-screen '>
         <Sidebar />
         <div className='flex-1 flex flex-col overflow-hidden'>
-          <HomeBar />
+          <NavBar />
           <div className='p-4 overflow-y-auto flex-1'>
             <div className='flex flex-col space-y-4'>
               <Card

@@ -27,8 +27,10 @@ app.use("/api/categories", categoryRoutes);
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() =>
-    app.listen(process.env.PORT || 5000, () => console.log("Server running "))
+    app.listen(process.env.PORT || 5000, () =>
+      console.log(" ✅ Server running ")
+    )
   )
-  .catch((err) => console.log(err));
+  .catch((err) => console.log("❌ MongoDB connection error:", err));
 
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));

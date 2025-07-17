@@ -10,6 +10,7 @@ export default function PostForm() {
   const navigate = useNavigate();
   const [post, setPost] = useState({ title: "", content: "" });
   const [file, setFile] = useState(null);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     if (id) {
@@ -43,12 +44,24 @@ export default function PostForm() {
         });
       } else {
         await axios.post("/api/posts", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`, // ✅ REQUIRED
+          },
         });
       }
-      navigate("/");
+      console.log(
+        "Form Data being submitted:",
+        formData.get("title"),
+        formData.get("content"),
+        formData.get("image")
+      );
+      window.showToast("Post created", "success");
+
+      navigate("/explore");
     } catch (err) {
       console.error("Failed to submit post:", err);
+      window.showToast("Failed to create post", "error");
     }
   };
 

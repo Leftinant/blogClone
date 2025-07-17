@@ -15,7 +15,6 @@ export const ToastContainer = () => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   };
 
-  // Expose `addToast` globally if needed
   window.showToast = addToast;
 
   return (

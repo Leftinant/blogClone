@@ -7,8 +7,9 @@ export default function Sidebar() {
       <Link to='/'>
         <Home className='w-6 h-6 text-base-content hover:text-primary cursor-pointer' />
       </Link>
-
-      <Compass className='w-6 h-6 text-base-content hover:text-primary cursor-pointer' />
+      <Link to='/explore'>
+        <Compass className='w-6 h-6 text-base-content hover:text-primary cursor-pointer' />
+      </Link>
       <Link to='/new'>
         <Plus className='w-6 h-6 text-base-content hover:text-primary cursor-pointer' />
       </Link>

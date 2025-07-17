@@ -29,13 +29,16 @@ function Signup() {
     }
 
     try {
-      const response = await axios.post("/api/auth/register", {
+      const res = await axios.post("/api/auth/register", {
         username: formData.name,
         email: formData.email,
         password: formData.password,
       });
 
-      console.log("Registration successful:", response.data);
+      const token = res.data.token;
+      localStorage.setItem("token", token);
+
+      console.log("Registration successful");
       window.showToast("Account created!", "success");
       setFormData({
         name: "",

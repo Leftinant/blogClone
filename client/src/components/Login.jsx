@@ -1,11 +1,16 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 function Login() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+
+  const navigate = useNavigate();
+  const { setUser } = useContext(AuthContext); // ✅ Move this here
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -15,20 +20,20 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("/api/auth/login", formData); // Vite proxy handles this
+      const res = await axios.post("/api/auth/login", formData);
       const { token, user } = res.data;
 
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
 
+      setUser(user); // ✅ Update context
+      navigate("/");
+
       window.showToast("Login successful!", "success");
 
-      // Close modal
       document.getElementById("my_modal_3").close();
-
-      // Optional: refresh or navigate
-      window.location.reload();
     } catch (err) {
+      console.error("Login error:", err);
       window.showToast(err.response?.data?.message || "Login failed", "error");
     }
   };

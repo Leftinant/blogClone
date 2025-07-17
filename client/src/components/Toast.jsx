@@ -4,14 +4,12 @@ const Toast = ({ message, type = "success", onClose }) => {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    // Animate in
     setVisible(true);
 
-    // Animate out after 3s
     const hideTimeout = setTimeout(() => {
       setVisible(false);
-      // Remove from DOM after animation
-      setTimeout(onClose, 300); // match duration-300
+
+      setTimeout(onClose, 300);
     }, 3000);
 
     return () => clearTimeout(hideTimeout);
