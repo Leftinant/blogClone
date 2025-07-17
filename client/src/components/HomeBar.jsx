@@ -1,4 +1,5 @@
 import React from "react";
+import Login from "./Login";
 
 function HomeBar() {
   return (
@@ -25,7 +26,10 @@ function HomeBar() {
         </svg>
         <input type='search' className='grow' placeholder='Search' />
       </label>
-      <button className='btn btn-neutral mx-3'>Login</button>
+      <a onClick={() => document.getElementById("my_modal_3").showModal()}>
+        <button className='btn btn-neutral mx-3'>Login</button>
+      </a>
+      <Login />
     </div>
   );
 }

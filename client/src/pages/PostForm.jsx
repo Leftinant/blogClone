@@ -29,7 +29,7 @@ export default function PostForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting..."); // ✅ See if this appears in the browser console
+    console.log("Submitting...");
 
     const formData = new FormData();
     formData.append("title", post.title);
