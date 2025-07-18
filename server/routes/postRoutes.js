@@ -6,33 +6,25 @@ const upload = require("../middleware/upload");
 
 const router = express.Router();
 
-// GET /api/posts?search=...&page=1&limit=5
 router.get("/", async (req, res) => {
-  const { search = "", page = 1, limit = 5 } = req.query;
-  const query = {
-    title: { $regex: search, $options: "i" },
-  };
-  const total = await Post.countDocuments(query);
-  const posts = await Post.find(query)
-    .populate("category")
-    .skip((page - 1) * limit)
-    .limit(parseInt(limit));
-  res.json({ total, posts });
+  try {
+    const posts = await Post.find()
+      .populate("user", "username") // 👈 populate only the username
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({ total: posts.length, posts });
+  } catch (err) {
+    res.status(500).json({ error: "Something went wrong." });
+  }
 });
 
 router.get("/:id", async (req, res) => {
-  const post = await Post.findById(req.params.id).populate("category");
-  res.json(post);
-});
-
-// GET all posts
-router.get("/", async (req, res) => {
   try {
-    const posts = await Post.find().populate("user", "username");
-    res.json(posts);
+    const post = await Post.findById(req.params.id);
+    if (!post) return res.status(404).json({ error: "Post not found" });
+    res.json(post);
   } catch (err) {
-    console.error("Error fetching posts:", err);
-    res.status(500).json({ message: "Server error fetching posts" });
+    res.status(500).json({ error: "Server error" });
   }
 });
 

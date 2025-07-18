@@ -3,8 +3,10 @@ import axios from "axios";
 import Card from "../components/Card"; // Your reusable card
 import Sidebar from "../components/SideBar";
 import NavBar from "../components/NavBar";
+import { useNavigate } from "react-router-dom";
 
 export default function AllPosts() {
+  const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
@@ -13,6 +15,27 @@ export default function AllPosts() {
       setPosts(res.data.posts); // ✅ only store the array
     });
   }, []);
+
+  const handleDelete = async (postId) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("You must be logged in to delete a post.");
+      return;
+    }
+
+    try {
+      await axios.delete(`http://localhost:5000/api/posts/${postId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setPosts((prev) => prev.filter((p) => p._id !== postId));
+    } catch (error) {
+      console.error("Delete failed:", error);
+      window.showToast("Failed to delete post.", "error");
+    }
+  };
 
   return (
     <div className='flex h-screen '>
@@ -24,7 +47,7 @@ export default function AllPosts() {
             {posts.map((post) => (
               <Card
                 key={post._id}
-                postImage={post.image}
+                postImage={`http://localhost:5000${post.image}`}
                 caption={post.content}
                 username={post.user?.username || "Unknown"}
                 avatarUrl={`https://i.pravatar.cc/150?img=${Math.floor(
@@ -32,7 +55,9 @@ export default function AllPosts() {
                 )}`}
                 likes={Math.floor(Math.random() * 1000)}
                 commentsCount={Math.floor(Math.random() * 100)}
-                hashtag='#lorem'
+                hashtag={post.title}
+                onDelete={() => handleDelete(post._id)}
+                onEdit={() => navigate(`/edit/${post._id}`)}
               />
             ))}
           </div>

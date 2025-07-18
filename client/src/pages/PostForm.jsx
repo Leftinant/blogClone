@@ -11,10 +11,16 @@ export default function PostForm() {
   const [post, setPost] = useState({ title: "", content: "" });
   const [file, setFile] = useState(null);
   const token = localStorage.getItem("token");
+  const [preview, setPreview] = useState(null);
 
   useEffect(() => {
     if (id) {
-      axios.get(`/api/posts/${id}`).then((res) => setPost(res.data));
+      axios.get(`/api/posts/${id}`).then((res) => {
+        setPost(res.data);
+        if (res.data.image) {
+          setPreview(`http://localhost:5000${res.data.image}`);
+        }
+      });
     }
   }, [id]);
 
@@ -23,9 +29,13 @@ export default function PostForm() {
     setPost((prev) => ({ ...prev, [name]: value }));
   };
 
-  // ADD THIS for file separately
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
+    if (selectedFile) {
+      const previewUrl = URL.createObjectURL(selectedFile);
+      setPreview(previewUrl);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -40,7 +50,10 @@ export default function PostForm() {
     try {
       if (id) {
         await axios.put(`/api/posts/${id}`, formData, {
-          headers: { "Content-Type": "multipart/form-data" },
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
         });
       } else {
         await axios.post("/api/posts", formData, {
@@ -78,25 +91,43 @@ export default function PostForm() {
           >
             {/* Upload Area */}
             <div className='w-full md:w-1/2 bg-base-300 border-dashed border-2 border-gray-300 rounded-2xl h-80 flex items-center justify-center flex-col text-gray-500 text-sm relative'>
-              <label
-                htmlFor='fileUpload'
-                className='cursor-pointer flex flex-col items-center'
-              >
-                <Upload className='w-6 h-6 mb-2' />
-                <span>Choose a file or drag and drop it here</span>
-                <input
-                  id='fileUpload'
-                  type='file'
-                  accept='image/*,video/mp4'
-                  onChange={handleFileChange}
-                  className='hidden'
+              {preview ? (
+                <img
+                  src={preview}
+                  alt='Preview'
+                  className='w-auto h-full object-center rounded-2xl '
                 />
-              </label>
-              <p className='absolute bottom-4 text-xs text-center w-full text-gray-400 px-4'>
-                We recommend using high-quality .jpg files less than 20MB or
-                .mp4 files less than 200MB.
-              </p>
+              ) : (
+                <label
+                  htmlFor='fileUpload'
+                  className='cursor-pointer flex flex-col items-center z-10'
+                >
+                  <Upload className='w-6 h-6 mb-2' />
+                  <span>Choose a file or drag and drop it here</span>
+                  <p className='absolute bottom-4 text-xs text-center w-full text-gray-400 px-4'>
+                    We recommend using high-quality .jpg files less than 20MB or
+                    .mp4 files less than 200MB.
+                  </p>
+                </label>
+              )}
+              <input
+                id='fileUpload'
+                type='file'
+                accept='image/*,video/mp4'
+                onChange={handleFileChange}
+                className='hidden'
+              />
             </div>
+
+            {/* Caption */}
+            <textarea
+              name='content'
+              value={post.content}
+              onChange={handleChange}
+              placeholder='Say something about this...'
+              rows={4}
+              className='my-6 w-full border border-gray-300 p-3 rounded-2xl outline-none text-sm'
+            />
 
             {/* Title */}
             <input
@@ -104,25 +135,14 @@ export default function PostForm() {
               value={post.title}
               onChange={handleChange}
               type='text'
-              placeholder='Add a title'
-              className='my-6 w-full border border-gray-300 p-3 rounded-2xl  outline-none text-sm '
-            />
-
-            {/* Description */}
-            <label className='text-sm '>Description</label>
-            <textarea
-              name='content'
-              value={post.content}
-              onChange={handleChange}
-              placeholder='Add a detailed description'
-              rows={4}
-              className=' w-full border border-gray-300 p-3 rounded-2xl outline-none text-sm'
+              placeholder='hashtag'
+              className='mb-6 w-full border border-gray-300 p-3 rounded-2xl  outline-none text-sm '
             />
 
             {/* Submit */}
             <button
               type='submit'
-              className='mt-6 py-2 bg-black text-white px-6 rounded-xl cursor-pointer'
+              className=' py-2 bg-black text-white px-6 rounded-xl cursor-pointer'
             >
               {id ? "Update" : "Create"}
             </button>
