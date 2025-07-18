@@ -25,6 +25,17 @@ router.get("/:id", async (req, res) => {
   res.json(post);
 });
 
+// GET all posts
+router.get("/", async (req, res) => {
+  try {
+    const posts = await Post.find().populate("user", "username");
+    res.json(posts);
+  } catch (err) {
+    console.error("Error fetching posts:", err);
+    res.status(500).json({ message: "Server error fetching posts" });
+  }
+});
+
 router.post(
   "/",
   auth,
@@ -39,6 +50,7 @@ router.post(
     const newPost = new Post({
       ...req.body,
       image: req.file ? "/uploads/" + req.file.filename : null,
+      user: req.user.id,
     });
     const savedPost = await newPost.save();
     res.status(201).json(savedPost);

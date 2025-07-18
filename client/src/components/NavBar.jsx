@@ -10,7 +10,6 @@ function NavBar() {
       <div className='flex-1'>
         <a className='btn btn-ghost text-xl'>BlogApp</a>
       </div>
-
       <label className='input md:w-300 w-full mx-5 rounded-md bg-base-300'>
         <svg
           className='h-[1em] opacity-50'

@@ -6,9 +6,10 @@ const dotenv = require("dotenv");
 const postRoutes = require("./routes/postRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const authRoutes = require("./routes/authRoutes");
+const path = require("path");
+const app = express();
 
 dotenv.config();
-const app = express();
 app.use(express.json());
 
 app.get("/", (req, res) => {
@@ -20,15 +21,14 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/posts", postRoutes);
-app.use("/uploads", express.static("uploads"));
-
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/categories", categoryRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() =>
     app.listen(process.env.PORT || 5000, () =>
-      console.log(" ✅ Server running ")
+      console.log("🚀 Server is up and running! ")
     )
   )
   .catch((err) => console.log("❌ MongoDB connection error:", err));
