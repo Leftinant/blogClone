@@ -1,3 +1,6 @@
+import express from "express";
+import cors from "cors";
+
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
@@ -18,7 +21,6 @@ app.get("/", (req, res) => {
   res.send("🚀 Server is up and running!");
 });
 
-app.use(cors());
 app.use(express.json());
 
 app.use(
