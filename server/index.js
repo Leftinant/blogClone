@@ -1,26 +1,21 @@
 import express from "express";
 import cors from "cors";
+import dotenv from "dotenv";
+import mongoose from "mongoose";
+import path from "path";
+import { fileURLToPath } from "url";
+import postRoutes from "./routes/postRoutes.js";
+import categoryRoutes from "./routes/categoryRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
+import commentsRoutes from "./routes/commentRoutes.js";
 
-require("dotenv").config();
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
-const dotenv = require("dotenv");
-const postRoutes = require("./routes/postRoutes");
-const categoryRoutes = require("./routes/categoryRoutes");
-const authRoutes = require("./routes/authRoutes");
-const path = require("path");
-const app = express();
-const commentsRoutes = require("./routes/commentRoutes");
-const allowedOrigins = ["https://blogapp-ben.vercel.app"];
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
-app.use(express.json());
-app.options("*", cors());
+const app = express();
 
-app.get("/", (req, res) => {
-  res.send("🚀 Server is up and running!");
-});
+const allowedOrigins = ["https://blogapp-ben.vercel.app"];
 
 app.use(
   cors({
@@ -34,18 +29,27 @@ app.use(
     credentials: true,
   })
 );
+app.options("*", cors());
+
+app.use(express.json());
+
+app.get("/", (req, res) => {
+  res.send("🚀 Server is up and running!");
+});
 
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/categories", categoryRoutes);
 app.use("/api/comments", commentsRoutes);
 
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() =>
-    app.listen(process.env.PORT || 5000, () =>
-      console.log(`🚀 Server is up and running on port ${PORT}`)
-    )
-  )
+  .then(() => {
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => {
+      console.log(`🚀 Server is up and running on port ${PORT}`);
+    });
+  })
   .catch((err) => console.log("❌ MongoDB connection error:", err));
