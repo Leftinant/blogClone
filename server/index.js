@@ -16,12 +16,11 @@ const allowedOrigins = ["https://blogapp-ben.vercel.app"];
 
 dotenv.config();
 app.use(express.json());
+app.options("*", cors());
 
 app.get("/", (req, res) => {
   res.send("🚀 Server is up and running!");
 });
-
-app.use(express.json());
 
 app.use(
   cors({
@@ -46,7 +45,7 @@ mongoose
   .connect(process.env.MONGO_URI)
   .then(() =>
     app.listen(process.env.PORT || 5000, () =>
-      console.log("🚀 Server is up and running! ")
+      console.log(`🚀 Server is up and running on port ${PORT}`)
     )
   )
   .catch((err) => console.log("❌ MongoDB connection error:", err));
