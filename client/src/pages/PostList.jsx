@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Card from "../components/Card"; // Your reusable card
+import Card from "../components/Card";
 import Sidebar from "../components/SideBar";
 import NavBar from "../components/NavBar";
 import { useNavigate } from "react-router-dom";
@@ -12,7 +12,7 @@ export default function AllPosts() {
   useEffect(() => {
     axios.get("/api/posts").then((res) => {
       console.log("API response:", res.data);
-      setPosts(res.data.posts); // ✅ only store the array
+      setPosts(res.data.posts);
     });
   }, []);
 
@@ -47,6 +47,7 @@ export default function AllPosts() {
             {posts.map((post) => (
               <Card
                 key={post._id}
+                postId={post._id}
                 postImage={`http://localhost:5000${post.image}`}
                 caption={post.content}
                 username={post.user?.username || "Unknown"}

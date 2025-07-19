@@ -23,11 +23,11 @@ function Home() {
               />
               <Card
                 avatarUrl='https://images.pexels.com/photos/29012504/pexels-photo-29012504.jpeg'
-                username='Gunther'
+                username='Bronson Read'
                 postImage='https://images.pexels.com/photos/3446915/pexels-photo-3446915.jpeg'
                 likes='300'
                 caption='From the Top'
-                hashtag='#RKO'
+                hashtag='#Tsunamiiiiii'
                 commentsCount={790}
               />
               <Card

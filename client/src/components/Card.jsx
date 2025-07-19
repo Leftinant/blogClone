@@ -1,4 +1,5 @@
 import { useState } from "react";
+import CommentSection from "./commentSection";
 import {
   FaHeart,
   FaRegComment,
@@ -17,9 +18,14 @@ export default function Card({
   commentsCount,
   onEdit,
   onDelete,
+  postId,
 }) {
   const [showOptions, setShowOptions] = useState(false);
   const toggleOptions = () => setShowOptions((prev) => !prev);
+  const currentUser = JSON.parse(localStorage.getItem("user"));
+  const loggedInUsername = currentUser?.username;
+  const isOwner = loggedInUsername === username;
+
   return (
     <div className='w-80 md:w-300 mx-auto rounded-xl shadow-md overflow-hidden border'>
       {/* Header */}
@@ -34,34 +40,36 @@ export default function Card({
             {username || "User Name"}
           </span>
         </div>
-        <div className='relative'>
-          <FaEllipsisH
-            className='text-gray-500 cursor-pointer'
-            onClick={toggleOptions}
-          />
-          {showOptions && (
-            <div className='absolute right-0 mt-2 w-40 bg-white rounded shadow-md z-10'>
-              <button
-                onClick={() => {
-                  toggleOptions();
-                  onEdit?.();
-                }}
-                className='block w-full text-left pr-10 pl-4 py-4 hover:bg-gray-100 text-sm'
-              >
-                Edit
-              </button>
-              <button
-                onClick={() => {
-                  toggleOptions();
-                  onDelete?.();
-                }}
-                className='block w-full text-left pr-10 pl-4 py-4 hover:bg-gray-100 text-sm text-red-600'
-              >
-                Delete
-              </button>
-            </div>
-          )}
-        </div>
+        {isOwner && (
+          <div className='relative'>
+            <FaEllipsisH
+              className='text-gray-500 cursor-pointer'
+              onClick={toggleOptions}
+            />
+            {showOptions && (
+              <div className='absolute right-0 mt-2 w-40 bg-base-100 rounded shadow-md z-10'>
+                <button
+                  onClick={() => {
+                    toggleOptions();
+                    onEdit?.();
+                  }}
+                  className='block w-full text-left pr-10 pl-4 py-4 hover:bg-gray-200 hover:text-black text-sm text-base-900 cursor-pointer'
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => {
+                    toggleOptions();
+                    onDelete?.();
+                  }}
+                  className='block w-full text-left pr-10 pl-4 py-4 hover:bg-gray-200 text-sm text-red-600 cursor-pointer'
+                >
+                  Delete
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Post Image */}
@@ -111,6 +119,7 @@ export default function Card({
           View all {commentsCount} comments
         </div>
       )}
+      <CommentSection postId={postId} />
     </div>
   );
 }

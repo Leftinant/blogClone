@@ -10,11 +10,11 @@ A full-featured blog platform built with the MERN stack (MongoDB, Express.js, Re
 - ✅ Protected routes for post creation/editing/deletion
 - ✅ Create, read, update, delete blog posts
 - ✅ Upload featured images (Multer)
-- ✅ Categories for posts
 - ✅ Comment system
 - ✅ Pagination and search
 - ✅ React Router navigation
 - ✅ Responsive UI
+- Categories for posts (coming soon ...)
 
 ---
 

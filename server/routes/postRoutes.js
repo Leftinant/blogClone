@@ -9,7 +9,7 @@ const router = express.Router();
 router.get("/", async (req, res) => {
   try {
     const posts = await Post.find()
-      .populate("user", "username") // 👈 populate only the username
+      .populate("user", "username")
       .sort({ createdAt: -1 });
 
     res.status(200).json({ total: posts.length, posts });
@@ -50,17 +50,32 @@ router.post(
 );
 
 router.put("/:id", auth, upload.single("image"), async (req, res) => {
+  const post = await Post.findById(req.params.id);
+  if (!post) return res.status(404).json({ error: "Post not found" });
+
+  if (post.user.toString() !== req.user.id) {
+    return res.status(403).json({ error: "Not authorized" });
+  }
+
   const updatedData = req.body;
   if (req.file) updatedData.image = "/uploads/" + req.file.filename;
 
   const updatedPost = await Post.findByIdAndUpdate(req.params.id, updatedData, {
     new: true,
   });
+
   res.json(updatedPost);
 });
 
 router.delete("/:id", auth, async (req, res) => {
-  await Post.findByIdAndDelete(req.params.id);
+  const post = await Post.findById(req.params.id);
+  if (!post) return res.status(404).json({ error: "Post not found" });
+
+  if (post.user.toString() !== req.user.id) {
+    return res.status(403).json({ error: "Not authorized" });
+  }
+
+  await post.deleteOne();
   res.status(204).end();
 });
 

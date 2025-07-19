@@ -1,9 +1,11 @@
 import React, { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import Login from "./Login";
+import { useNavigate } from "react-router-dom";
 
 function NavBar() {
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   return (
     <div className='navbar bg-base-100 shadow-sm'>
@@ -72,7 +74,9 @@ function NavBar() {
                 onClick={() => {
                   localStorage.removeItem("token");
                   localStorage.removeItem("user");
+
                   window.location.reload();
+                  navigate("/");
                 }}
               >
                 Logout

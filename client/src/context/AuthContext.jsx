@@ -9,7 +9,6 @@ export const AuthProvider = ({ children }) => {
   });
 
   useEffect(() => {
-    // Sync user on mount
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));

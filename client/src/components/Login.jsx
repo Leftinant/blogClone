@@ -10,7 +10,7 @@ function Login() {
   });
 
   const navigate = useNavigate();
-  const { setUser } = useContext(AuthContext); // ✅ Move this here
+  const { setUser } = useContext(AuthContext);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,11 +26,11 @@ function Login() {
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
 
-      setUser(user); // ✅ Update context
+      setUser(user);
       navigate("/");
+      window.location.reload();
 
       window.showToast("Login successful!", "success");
-
       document.getElementById("my_modal_3").close();
     } catch (err) {
       console.error("Login error:", err);
@@ -122,7 +122,7 @@ function Login() {
                     name='password'
                     required
                     placeholder='Password'
-                    minlength='8'
+                    minLength='8'
                     pattern='(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}'
                     title='Must be more than 8 characters, including number, lowercase letter, uppercase letter'
                     value={formData.password}

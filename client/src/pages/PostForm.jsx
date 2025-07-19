@@ -91,16 +91,34 @@ export default function PostForm() {
           >
             {/* Upload Area */}
             <div className='w-full md:w-1/2 bg-base-300 border-dashed border-2 border-gray-300 rounded-2xl h-80 flex items-center justify-center flex-col text-gray-500 text-sm relative'>
-              {preview ? (
-                <img
-                  src={preview}
-                  alt='Preview'
-                  className='w-auto h-full object-center rounded-2xl '
-                />
+              {file || post.image ? (
+                <div className='relative w-auto h-full'>
+                  <img
+                    src={
+                      file
+                        ? URL.createObjectURL(file)
+                        : `http://localhost:5000${post.image}`
+                    }
+                    alt='Preview'
+                    className='object-center w-full h-full rounded-2xl'
+                  />
+                  {/* Close button */}
+                  <button
+                    type='button'
+                    onClick={() => {
+                      setFile(null);
+                      setPost((prev) => ({ ...prev, image: "" }));
+                    }}
+                    className='absolute top-2 right-2 bg-black text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600'
+                    title='Remove image'
+                  >
+                    ×
+                  </button>
+                </div>
               ) : (
                 <label
                   htmlFor='fileUpload'
-                  className='cursor-pointer flex flex-col items-center z-10'
+                  className='cursor-pointer flex flex-col items-center'
                 >
                   <Upload className='w-6 h-6 mb-2' />
                   <span>Choose a file or drag and drop it here</span>
@@ -108,15 +126,16 @@ export default function PostForm() {
                     We recommend using high-quality .jpg files less than 20MB or
                     .mp4 files less than 200MB.
                   </p>
+                  <input
+                    key={Date.now()} // 👈 FORCE input re-render each time it's removed
+                    id='fileUpload'
+                    type='file'
+                    accept='image/*,video/mp4'
+                    onChange={handleFileChange}
+                    className='hidden'
+                  />
                 </label>
               )}
-              <input
-                id='fileUpload'
-                type='file'
-                accept='image/*,video/mp4'
-                onChange={handleFileChange}
-                className='hidden'
-              />
             </div>
 
             {/* Caption */}
