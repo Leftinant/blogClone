@@ -8,6 +8,7 @@ const categoryRoutes = require("./routes/categoryRoutes");
 const authRoutes = require("./routes/authRoutes");
 const path = require("path");
 const app = express();
+const commentsRoutes = require("./routes/commentRoutes");
 
 dotenv.config();
 app.use(express.json());
@@ -16,13 +17,15 @@ app.get("/", (req, res) => {
   res.send("🚀 Server is up and running!");
 });
 
-app.use("/api/auth", authRoutes);
 app.use(cors());
 app.use(express.json());
+app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 
+app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/categories", categoryRoutes);
+app.use("/api/comments", commentsRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI)
@@ -32,5 +35,3 @@ mongoose
     )
   )
   .catch((err) => console.log("❌ MongoDB connection error:", err));
-
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));

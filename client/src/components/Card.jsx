@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import CommentSection from "./commentSection";
+
 import {
   FaHeart,
   FaRegComment,
@@ -15,7 +17,6 @@ export default function Card({
   likes,
   caption,
   hashtag,
-  commentsCount,
   onEdit,
   onDelete,
   postId,
@@ -25,6 +26,46 @@ export default function Card({
   const currentUser = JSON.parse(localStorage.getItem("user"));
   const loggedInUsername = currentUser?.username;
   const isOwner = loggedInUsername === username;
+  const [showComments, setShowComments] = useState(false);
+  const [comments, setComments] = useState([]);
+  const [text, setText] = useState("");
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        if (showComments && postId) {
+          const res = await axios.get(`/api/comments/${postId}`);
+          setComments(res.data);
+        }
+      } catch (err) {
+        console.error("Failed to load comments:", err);
+      }
+    };
+    fetchComments();
+  }, [showComments, postId]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!text.trim()) return;
+
+    try {
+      const res = await axios.post(
+        `/api/comments/${postId}`,
+        { text },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setComments([...comments, res.data]);
+      setText("");
+    } catch (err) {
+      console.error("Failed to post comment", err);
+      window.showToast("Failed to post comment", "error");
+    }
+  };
 
   return (
     <div className='w-80 md:w-300 mx-auto rounded-xl shadow-md overflow-hidden border'>
@@ -114,12 +155,31 @@ export default function Card({
       )}
 
       {/* Comments */}
-      {commentsCount && (
-        <div className='px-4 text-sm text-gray-500 cursor-pointer'>
-          View all {commentsCount} comments
-        </div>
-      )}
-      <CommentSection postId={postId} />
+      <form onSubmit={handleSubmit} className='flex gap-2 mt-3 mx-5'>
+        <input
+          type='text'
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder='Add a comment...'
+          className='flex-1 p-2 border rounded-3xl text-sm bg-base-300'
+        />
+        <button
+          type='submit'
+          className='btn btn-dash btn-success  rounded-lg px-3'
+        >
+          Send
+        </button>
+      </form>
+      <p
+        className='text-blue-600 cursor-pointer text-sm hover:underline mx-5 my-3'
+        onClick={() => setShowComments((prev) => !prev)}
+      >
+        {showComments
+          ? "Hide comments"
+          : `View all ${comments.length} comments`}
+      </p>
+
+      {showComments && <CommentSection postId={postId} />}
     </div>
   );
 }

@@ -55,7 +55,7 @@ export default function AllPosts() {
                   Math.random() * 70 + 1
                 )}`}
                 likes={Math.floor(Math.random() * 1000)}
-                commentsCount={Math.floor(Math.random() * 100)}
+                // commentsCount={comments.length}
                 hashtag={post.title}
                 onDelete={() => handleDelete(post._id)}
                 onEdit={() => navigate(`/edit/${post._id}`)}

@@ -3,66 +3,49 @@ import axios from "axios";
 
 export default function CommentSection({ postId }) {
   const [comments, setComments] = useState([]);
-  const [text, setText] = useState("");
-
-  const token = localStorage.getItem("token");
 
   useEffect(() => {
-    axios.get(`/api/comments/${postId}`).then((res) => {
-      setComments(res.data);
-    });
+    const fetchComments = async () => {
+      try {
+        const res = await axios.get(`/api/comments/${postId}`);
+        setComments(res.data);
+      } catch (err) {
+        console.error("Failed to fetch comments", err);
+      }
+    };
+
+    if (postId) fetchComments();
   }, [postId]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!text.trim()) return;
-
-    try {
-      const res = await axios.post(
-        `/api/comments/${postId}`,
-        { text },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setComments([...comments, res.data]);
-      setText("");
-    } catch (err) {
-      console.error("Failed to post comment", err);
-      window.showToast("Failed to post comment", "error");
-    }
-  };
-
   return (
-    <div className='mt-4'>
-      <h4 className='font-semibold mb-2'>Comments</h4>
-
-      <form onSubmit={handleSubmit} className='flex gap-2 mb-4'>
-        <input
-          type='text'
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder='Add a comment...'
-          className='flex-1 border border-gray-300 p-2 rounded-lg text-sm'
-        />
-        <button
-          type='submit'
-          className='bg-black text-white px-4 py-2 rounded-lg'
-        >
-          Post
-        </button>
-      </form>
-
-      <ul className='space-y-2'>
+    <div className='mx-6 my-3 max-w-100'>
+      <div>
+        <h4 className='font-semibold mb-2'>Comments</h4>
+      </div>
+      <div className='mt-4 space-y-4'>
         {comments.map((comment) => (
-          <li key={comment._id} className='text-sm bg-gray-100 p-2 rounded-lg'>
-            <span className='font-medium text-gray-800'>{comment.author}</span>:{" "}
-            {comment.text}
-          </li>
+          <div key={comment._id} className='flex gap-2 '>
+            <div className='w-8 h-8  flex-shrink-0'>
+              <img
+                src={`https://i.pravatar.cc/150?img=${Math.floor(
+                  Math.random() * 70 + 1
+                )}`}
+                alt='avatar'
+                className='rounded-full'
+              />
+            </div>
+            <div className='bg-base-300 rounded-4xl p-3 w-full'>
+              <p className='text-sm font-bold'>
+                {comment.author?.username || "Unknown"}
+              </p>
+              <p className='text-sm text-base-800'>{comment.text}</p>
+              <div className='text-xs text-gray-500 mt-1'>
+                {new Date(comment.createdAt).toLocaleString()}
+              </div>
+            </div>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
