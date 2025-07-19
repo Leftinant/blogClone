@@ -30,12 +30,13 @@ export default function Card({
   const [comments, setComments] = useState([]);
   const [text, setText] = useState("");
   const token = localStorage.getItem("token");
+  const base = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
     const fetchComments = async () => {
       try {
         if (showComments && postId) {
-          const res = await axios.get(`/api/comments/${postId}`);
+          const res = await axios.get(`${base}/api/comments/${postId}`);
           setComments(res.data);
         }
       } catch (err) {
@@ -51,7 +52,7 @@ export default function Card({
 
     try {
       const res = await axios.post(
-        `/api/comments/${postId}`,
+        `${base}/api/comments/${postId}`,
         { text },
         {
           headers: {

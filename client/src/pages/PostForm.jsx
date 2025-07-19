@@ -12,10 +12,11 @@ export default function PostForm() {
   const [file, setFile] = useState(null);
   const token = localStorage.getItem("token");
   const [preview, setPreview] = useState(null);
+  const base = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
     if (id) {
-      axios.get(`/api/posts/${id}`).then((res) => {
+      axios.get(`${base}/api/posts/${id}`).then((res) => {
         setPost(res.data);
         if (res.data.image) {
           setPreview(`http://localhost:5000${res.data.image}`);
@@ -49,14 +50,14 @@ export default function PostForm() {
 
     try {
       if (id) {
-        await axios.put(`/api/posts/${id}`, formData, {
+        await axios.put(`${base}/api/posts/${id}`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
           },
         });
       } else {
-        await axios.post("/api/posts", formData, {
+        await axios.post(`${base}/api/posts`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`, // ✅ REQUIRED

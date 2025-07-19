@@ -8,9 +8,10 @@ import { useNavigate } from "react-router-dom";
 export default function AllPosts() {
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
+  const base = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
-    axios.get("/api/posts").then((res) => {
+    axios.get(`${base}/api/posts`).then((res) => {
       console.log("API response:", res.data);
       setPosts(res.data.posts);
     });

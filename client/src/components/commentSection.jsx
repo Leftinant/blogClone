@@ -3,11 +3,12 @@ import axios from "axios";
 
 export default function CommentSection({ postId }) {
   const [comments, setComments] = useState([]);
+  const base = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const res = await axios.get(`/api/comments/${postId}`);
+        const res = await axios.get(`${base}/api/comments/${postId}`);
         setComments(res.data);
       } catch (err) {
         console.error("Failed to fetch comments", err);
