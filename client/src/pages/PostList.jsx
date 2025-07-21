@@ -12,7 +12,6 @@ export default function AllPosts() {
 
   useEffect(() => {
     axios.get(`${base}/api/posts`).then((res) => {
-      console.log("API response:", res.data);
       setPosts(res.data.posts);
     });
   }, []);

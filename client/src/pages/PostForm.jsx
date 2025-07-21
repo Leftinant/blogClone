@@ -41,12 +41,11 @@ export default function PostForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting...");
 
     const formData = new FormData();
     formData.append("title", post.title);
     formData.append("content", post.content);
-    if (file) formData.append("image", file); // the field name must match the backend: 'image'
+    if (file) formData.append("image", file);
 
     try {
       if (id) {
@@ -60,7 +59,7 @@ export default function PostForm() {
         await axios.post(`${base}/api/posts`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`, // ✅ REQUIRED
+            Authorization: `Bearer ${token}`,
           },
         });
       }
