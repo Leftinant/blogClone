@@ -1,8 +1,8 @@
-const express = require("express");
-const { body, validationResult } = require("express-validator");
-const Post = require("../models/Post");
-const auth = require("../middleware/authMiddleware");
-const upload = require("../middleware/upload");
+import express from "express";
+import { body, validationResult } from "express-validator";
+import Post from "../models/Post.js";
+import auth from "../middleware/authMiddleware.js";
+import upload from "../middleware/upload.js";
 
 const router = express.Router();
 
@@ -36,14 +36,16 @@ router.post(
   body("content").notEmpty(),
   async (req, res) => {
     const errors = validationResult(req);
-    if (!errors.isEmpty())
+    if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
+    }
 
     const newPost = new Post({
       ...req.body,
       image: req.file ? "/uploads/" + req.file.filename : null,
       user: req.user.id,
     });
+
     const savedPost = await newPost.save();
     res.status(201).json(savedPost);
   }
@@ -79,4 +81,4 @@ router.delete("/:id", auth, async (req, res) => {
   res.status(204).end();
 });
 
-module.exports = router;
+export default router;
