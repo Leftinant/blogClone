@@ -6,7 +6,12 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+<<<<<<< HEAD
     "start": "node index.js"
+=======
+    "start": "node index.js",
+     "build": "echo 'no build needed for backend'"
+>>>>>>> bb986f7 (update package.json)
   },
   "keywords": [],
   "author": "",
