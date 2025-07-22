@@ -46,7 +46,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/comments", commentsRoutes);
-app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+
 app.use((err, req, res, next) => {
   console.error("❌ Server error:", err.stack);
   res.status(500).json({ error: "Something went wrong on the server." });
