@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 
-const Toast = ({ message, type = "success", onClose }) => {
+const Toast = ({ message, type = "info", onClose }) => {
   const [visible, setVisible] = useState(false);
+
+  const safeType = ["success", "error", "warning", "info"].includes(type)
+    ? type
+    : "info";
 
   useEffect(() => {
     setVisible(true);
@@ -17,8 +21,9 @@ const Toast = ({ message, type = "success", onClose }) => {
 
   return (
     <div
-      className={`alert alert-${type} shadow-lg transition-all duration-300 ease-in-out
-        ${visible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2"}`}
+      className={`alert alert-${safeType} shadow-lg transition-all duration-300 ease-in-out 
+        ${visible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2"}
+      `}
     >
       <span>{message}</span>
     </div>

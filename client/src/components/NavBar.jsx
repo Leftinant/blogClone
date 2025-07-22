@@ -7,6 +7,12 @@ function NavBar() {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/");
+  };
+
   return (
     <div className='navbar bg-base-100 shadow-sm'>
       <div className='flex-1'>
@@ -70,14 +76,7 @@ function NavBar() {
               <a>Settings</a>
             </li>
             <li>
-              <a
-                onClick={() => {
-                  localStorage.removeItem("token");
-                  localStorage.removeItem("user");
-                  window.location.reload();
-                  navigate("/");
-                }}
-              >
+              <a onClick={handleLogout} className='cursor-pointer'>
                 Logout
               </a>
             </li>
