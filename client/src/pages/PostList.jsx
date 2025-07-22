@@ -24,7 +24,7 @@ export default function AllPosts() {
     }
 
     try {
-      await axios.delete(`http://localhost:5000/api/posts/${postId}`, {
+      await axios.delete(`${base}/api/posts/${postId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -55,7 +55,6 @@ export default function AllPosts() {
                   Math.random() * 70 + 1
                 )}`}
                 likes={Math.floor(Math.random() * 1000)}
-                // commentsCount={comments.length}
                 hashtag={post.title}
                 onDelete={() => handleDelete(post._id)}
                 onEdit={() => navigate(`/edit/${post._id}`)}

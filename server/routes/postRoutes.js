@@ -39,49 +39,71 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    console.log("BODY:", req.body);
-    console.log("USER:", req.user);
-    console.log("FILE:", req.file);
 
-    const newPost = new Post({
-      ...req.body,
-      image: req.file ? "/uploads/" + req.file.filename : null,
-      user: req.user.id,
-    });
+    try {
+      console.log("BODY:", req.body);
+      console.log("USER:", req.user);
+      console.log("FILE:", req.file);
 
-    const savedPost = await newPost.save();
-    res.status(201).json(savedPost);
+      const newPost = new Post({
+        ...req.body,
+        image: req.file ? req.file.path : null,
+        user: req.user.id,
+      });
+
+      const savedPost = await newPost.save();
+      res.status(201).json(savedPost);
+    } catch (err) {
+      console.error("❌ Post creation failed:", err);
+      res.status(500).json({ error: "Something went wrong on the server." });
+    }
   }
 );
 
 router.put("/:id", auth, upload.single("image"), async (req, res) => {
-  const post = await Post.findById(req.params.id);
-  if (!post) return res.status(404).json({ error: "Post not found" });
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) return res.status(404).json({ error: "Post not found" });
 
-  if (post.user.toString() !== req.user.id) {
-    return res.status(403).json({ error: "Not authorized" });
+    if (post.user.toString() !== req.user.id) {
+      return res.status(403).json({ error: "Not authorized" });
+    }
+
+    const updatedData = req.body;
+    if (req.file) {
+      updatedData.image = req.file.path;
+    }
+
+    const updatedPost = await Post.findByIdAndUpdate(
+      req.params.id,
+      updatedData,
+      {
+        new: true,
+      }
+    );
+
+    res.json(updatedPost);
+  } catch (err) {
+    console.error("❌ Post update failed:", err);
+    res.status(500).json({ error: "Something went wrong." });
   }
-
-  const updatedData = req.body;
-  if (req.file) updatedData.image = "/uploads/" + req.file.filename;
-
-  const updatedPost = await Post.findByIdAndUpdate(req.params.id, updatedData, {
-    new: true,
-  });
-
-  res.json(updatedPost);
 });
 
 router.delete("/:id", auth, async (req, res) => {
-  const post = await Post.findById(req.params.id);
-  if (!post) return res.status(404).json({ error: "Post not found" });
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) return res.status(404).json({ error: "Post not found" });
 
-  if (post.user.toString() !== req.user.id) {
-    return res.status(403).json({ error: "Not authorized" });
+    if (post.user.toString() !== req.user.id) {
+      return res.status(403).json({ error: "Not authorized" });
+    }
+
+    await post.deleteOne();
+    res.status(204).end();
+  } catch (err) {
+    console.error("❌ Post delete failed:", err);
+    res.status(500).json({ error: "Something went wrong." });
   }
-
-  await post.deleteOne();
-  res.status(204).end();
 });
 
 export default router;
