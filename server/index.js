@@ -9,24 +9,9 @@ import postRoutes from "./routes/postRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import commentsRoutes from "./routes/commentRoutes.js";
-
-import { v2 as cloudinary } from "cloudinary";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const uploadDir = path.join(process.cwd(), "uploads");
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir);
-}
+import "./utils/cloudinary.js";
 
 dotenv.config();
-
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
 
 const app = express();
 
@@ -47,8 +32,6 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-app.use("/uploads", express.static(uploadDir));
 
 app.get("/", (req, res) => {
   res.send("🚀 Server is up and running!");
