@@ -56,7 +56,7 @@ export default function PostForm() {
           },
         });
       } else {
-        await axios.post(`${base}/api/posts`, formData, {
+        await axios.post(`${base}/`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
