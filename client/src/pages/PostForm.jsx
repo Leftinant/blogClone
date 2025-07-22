@@ -49,14 +49,14 @@ export default function PostForm() {
 
     try {
       if (id) {
-        await axios.put(`${base}/api/posts/${id}`, formData, {
+        await axios.put(`${base}/posts/${id}`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
           },
         });
       } else {
-        await axios.post(`${base}/`, formData, {
+        await axios.post(`${base}/posts`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
