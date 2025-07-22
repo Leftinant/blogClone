@@ -8,7 +8,7 @@ export const ToastContainer = () => {
 
   const addToast = (message, type = "success") => {
     const id = toastId++;
-    setToasts((prev) => [...prev, { id, message, type }]);
+    setToasts((prev) => [...prev, { message, type }]);
   };
 
   const removeToast = (id) => {
@@ -18,7 +18,7 @@ export const ToastContainer = () => {
   window.showToast = addToast;
 
   return (
-    <div className='toast toast-top toast-center z-50 fixed top-4 left-1/2 transform -translate-x-1/2 space-y-2'>
+    <div className='toast toast-end z-50 fixed top-4 left-1/2 transform -translate-x-1/2 space-y-2'>
       {toasts.map(({ id, message, type }) => (
         <Toast
           key={id}

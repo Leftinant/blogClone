@@ -34,5 +34,4 @@ A full-featured blog platform built with the MERN stack (MongoDB, Express.js, Re
 git clone https://github.com/Leftinant/blogClone
 cd blogClone
 
-
 ```
