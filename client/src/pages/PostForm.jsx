@@ -11,7 +11,7 @@ export default function PostForm() {
   const [post, setPost] = useState({ title: "", content: "" });
   const [file, setFile] = useState(null);
   const token = localStorage.getItem("token");
-  const [preview, setPreview] = useState(null);
+  const [setPreview] = useState(null);
   const base = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
@@ -19,7 +19,7 @@ export default function PostForm() {
       axios.get(`${base}/api/posts/${id}`).then((res) => {
         setPost(res.data);
         if (res.data.image) {
-          setPreview(`http://localhost:5000${res.data.image}`);
+          setPreview(`${base}${res.data.image}`);
         }
       });
     }

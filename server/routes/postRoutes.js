@@ -41,10 +41,6 @@ router.post(
     }
 
     try {
-      console.log("BODY:", req.body);
-      console.log("USER:", req.user);
-      console.log("FILE:", req.file);
-
       const newPost = new Post({
         ...req.body,
         image: req.file ? req.file.path : null,
