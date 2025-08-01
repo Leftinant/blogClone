@@ -11,7 +11,7 @@ export default function PostForm() {
   const [post, setPost] = useState({ title: "", content: "" });
   const [file, setFile] = useState(null);
   const token = localStorage.getItem("token");
-  const [setPreview] = useState(null);
+  const [preview, setPreview] = useState(null);
   const base = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
